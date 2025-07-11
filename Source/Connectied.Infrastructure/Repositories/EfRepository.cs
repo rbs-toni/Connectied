@@ -10,7 +10,7 @@ using System.Linq;
 namespace Connectied.Infrastructure.Repositories;
 public class EfRepository<T> : RepositoryBase<T>, IReadRepository<T>, IRepository<T> where T : class, IAggregateRoot
 {
-    public EfRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public EfRepository(ConnectiedDbContext dbContext) : base(dbContext)
     {
     }
 

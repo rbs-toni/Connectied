@@ -1,27 +1,27 @@
 ﻿using Ardalis.Result;
 using Connectied.Application.Contracts;
 using Connectied.Application.Repositories;
-using Connectied.Domain.GuestLists;
+using Connectied.Domain.GuestList;
 using Microsoft.Extensions.Logging;
 
-namespace Connectied.Application.GuestLists.Queries;
-class GetGuestListsHandler : IQueryHandler<GetGuestLists, Result<IReadOnlyCollection<GuestListDto>>>
+namespace Connectied.Application.GuestList.Queries;
+class GetGuestListHandler : IQueryHandler<GetGuestList, Result<IReadOnlyCollection<GuestDto>>>
 {
-    private readonly IReadRepository<GuestList> _guestListRepository;
-    private readonly ILogger<GetGuestListsHandler> _logger;
+    private readonly IReadRepository<Guest> _guestListRepository;
+    private readonly ILogger<GetGuestListHandler> _logger;
 
-    public GetGuestListsHandler(IReadRepository<GuestList> guestListRepository, ILogger<GetGuestListsHandler> logger)
+    public GetGuestListHandler(IReadRepository<Guest> guestListRepository, ILogger<GetGuestListHandler> logger)
     {
         _guestListRepository = guestListRepository;
         _logger = logger;
     }
 
-    public async Task<Result<IReadOnlyCollection<GuestListDto>>> Handle(GetGuestLists request, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyCollection<GuestDto>>> Handle(GetGuestList request, CancellationToken cancellationToken)
     {
         try
         {
             var guestLists = await _guestListRepository.ListAsync(cancellationToken);
-            var guestListDtos = guestLists.Select(gl => new GuestListDto
+            var guestListDtos = guestLists.Select(gl => new GuestDto
             {
                 Id = gl.Id,
                 Name = gl.Name,
@@ -37,7 +37,7 @@ class GetGuestListsHandler : IQueryHandler<GetGuestLists, Result<IReadOnlyCollec
                 Event2Souvenir = gl.Event2Souvenir,
                 Notes = gl.Notes
             }).ToList();
-            return Result.Success<IReadOnlyCollection<GuestListDto>>(guestListDtos);
+            return Result.Success<IReadOnlyCollection<GuestDto>>(guestListDtos);
         }
         catch (Exception ex)
         {

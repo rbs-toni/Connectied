@@ -1,4 +1,4 @@
-﻿using Connectied.Application.GuestLists.Queries;
+﻿using Connectied.Application.GuestList.Queries;
 using Connectied.Server.Extensions;
 using Connectied.Server.Infrastructure;
 using MediatR;
@@ -7,16 +7,16 @@ using System;
 using System.Linq;
 
 namespace Connectied.Server.Endpoints;
-public class GuestLists : EndpointGroupBase
+public class GuestList : EndpointGroupBase
 {
     public override void Map(WebApplication app)
     {
         app.MapGroup(this)
-            .MapGet(GetGuestLists);
+            .MapGet(GetGuestList);
     }
-    async Task<IResult> GetGuestLists([FromServices] ISender sender)
+    async Task<IResult> GetGuestList([FromServices] ISender sender)
     {
-        var result = await sender.Send(new GetGuestLists());
+        var result = await sender.Send(new GetGuestList());
 
         return result.ToMinimalApiResult();
     }

@@ -10,12 +10,16 @@ namespace Connectied.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "Connectied");
+
             migrationBuilder.CreateTable(
-                name: "GuestLists",
+                name: "Guests",
+                schema: "Connectied",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Group = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Event1Quota = table.Column<int>(type: "int", nullable: false),
                     Event2Quota = table.Column<int>(type: "int", nullable: false),
@@ -30,7 +34,7 @@ namespace Connectied.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GuestLists", x => x.Id);
+                    table.PrimaryKey("PK_Guests", x => x.Id);
                 });
         }
 
@@ -38,7 +42,8 @@ namespace Connectied.Infrastructure.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GuestLists");
+                name: "Guests",
+                schema: "Connectied");
         }
     }
 }

@@ -1,9 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Connectied.Domain.GuestLists;
-public class GuestList : Entity, IAggregateRoot
+namespace Connectied.Domain.GuestList;
+[Table("Guests", Schema = "Connectied")]
+public class Guest : BaseEntity, IAggregateRoot
 {
+    [MaxLength(50)]
     public required string Name { get; set; }
     public string? Group { get; set; }
     public int Event1Quota { get; set; }

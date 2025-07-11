@@ -1,9 +1,9 @@
-﻿using Connectied.Application.GuestLists;
+﻿using Connectied.Application.GuestList;
 using System;
 using System.Linq;
 
 namespace Connectied.Server.Infrastructure;
 public interface IGroupListsClient
 {
-    Task<IReadOnlyCollection<GuestListDto>> GetLatestGroupLists(CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<GuestDto>> GetLatestGroupLists(CancellationToken cancellationToken = default);
 }

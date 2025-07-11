@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json.Serialization;
-using Connectied.Application.GuestLists.Converters;
 
-namespace Connectied.Application.GuestLists;
-public record GuestListDto
+namespace Connectied.Application.GuestList;
+public record GuestDto
 {
     public required string Id { get; set; }
     public required string Name { get; set; }

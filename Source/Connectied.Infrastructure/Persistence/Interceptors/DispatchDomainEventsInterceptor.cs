@@ -19,7 +19,7 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
         }
 
         var entities = context.ChangeTracker
-            .Entries<Entity>()
+            .Entries<BaseEntity>()
             .Where(e => e.Entity.DomainEvents.Any())
             .Select(e => e.Entity);
 

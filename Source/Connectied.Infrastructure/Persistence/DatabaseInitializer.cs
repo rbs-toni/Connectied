@@ -6,13 +6,13 @@ using Microsoft.Extensions.Logging;
 namespace Connectied.Infrastructure.Persistence;
 class DatabaseInitializer : IDatabaseInitializer
 {
-    readonly ApplicationDbContext _dbContext;
+    readonly ConnectiedDbContext _dbContext;
     readonly ILogger<DatabaseInitializer> _logger;
     readonly IEnumerable<ISeeder> _seeders;
 
     public DatabaseInitializer(
         IServiceProvider serviceProvider,
-        ApplicationDbContext dbContext,
+        ConnectiedDbContext dbContext,
         ILogger<DatabaseInitializer> logger)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));

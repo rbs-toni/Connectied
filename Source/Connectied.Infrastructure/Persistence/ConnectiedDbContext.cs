@@ -1,17 +1,17 @@
-﻿using Connectied.Domain.GuestLists;
+﻿using Connectied.Domain.GuestList;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Reflection;
 
 namespace Connectied.Infrastructure.Persistence;
-public class ApplicationDbContext : DbContext
+public class ConnectiedDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public ConnectiedDbContext(DbContextOptions<ConnectiedDbContext> options) : base(options)
     {
     }
 
-    public DbSet<GuestList> GuestLists => Set<GuestList>();
+    public DbSet<Guest> Guests => Set<Guest>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

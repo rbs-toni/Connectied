@@ -1,17 +1,21 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Connectied.Domain;
-public abstract class Entity
+public abstract class BaseEntity
 {
     readonly List<BaseEvent> _domainEvents = new();
 
-    protected Entity()
+    protected BaseEntity()
     {
         Id = Guid.NewGuid().ToString();
     }
 
+    [Key]
+    [MaxLength(36)]
     public string Id { get; set; }
+
     [NotMapped]
     public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();
 

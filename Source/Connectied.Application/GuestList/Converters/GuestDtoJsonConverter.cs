@@ -1,14 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 using System.Text.Json;
 
-namespace Connectied.Application.GuestLists.Converters;
-public class GuestListDtoJsonConverter : JsonConverter<GuestListDto>
+namespace Connectied.Application.GuestList.Converters;
+public class GuestDtoJsonConverter : JsonConverter<GuestDto>
 {
-    public override GuestListDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override GuestDto Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var json = JsonDocument.ParseValue(ref reader).RootElement;
 
-        return new GuestListDto
+        return new GuestDto
         {
             Id = json.GetProperty("id").GetString() ?? "",
             Name = json.GetProperty("name").GetString() ?? "",
@@ -25,7 +25,7 @@ public class GuestListDtoJsonConverter : JsonConverter<GuestListDto>
             Notes = json.TryGetProperty("notes", out var n) ? n.GetString() : null
         };
     }
-    public override void Write(Utf8JsonWriter writer, GuestListDto value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, GuestDto value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value, options);
     }

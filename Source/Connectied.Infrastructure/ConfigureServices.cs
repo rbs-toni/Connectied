@@ -31,7 +31,7 @@ public static class ConfigureServices
                     Logger.Information("Current Database Provider: {DatabaseProvider}", config.Provider);
                     Logger.Information("Current Connection String: {ConnectionString}", config.ConnectionString);
                 });
-        services.AddDbContext<ApplicationDbContext>(
+        services.AddDbContext<ConnectiedDbContext>(
             (sp, opts) =>
             {
                 var dbOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;

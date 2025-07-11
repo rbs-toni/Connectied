@@ -1,4 +1,4 @@
-﻿using Connectied.Domain.GuestLists;
+﻿using Connectied.Domain.GuestList;
 using Connectied.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -26,14 +26,14 @@ public class GuestListsHostedService : BackgroundService
             {
                 using var scope = _serviceProvider.CreateScope();
                 var client = scope.ServiceProvider.GetRequiredService<IGroupListsClient>();
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var context = scope.ServiceProvider.GetRequiredService<ConnectiedDbContext>();
 
                 _logger.LogInformation("📥 Fetching guest lists from external source...");
 
                 var fetchedLists = await client.GetLatestGroupLists(stoppingToken);
                 _logger.LogInformation("✅ Fetched {Count} guest list(s).", fetchedLists.Count);
 
-                var existingIds = await context.GuestLists
+                var existingIds = await context.Guests
                     .Select(g => g.Id)
                     .ToListAsync(stoppingToken);
 
@@ -41,7 +41,7 @@ public class GuestListsHostedService : BackgroundService
 
                 var newEntities = fetchedLists
                     .Where(dto => !existingIds.Contains(dto.Id))
-                    .Select(dto => new GuestList
+                    .Select(dto => new Guest
                     {
                         Id = dto.Id,
                         Name = dto.Name,
@@ -65,7 +65,7 @@ public class GuestListsHostedService : BackgroundService
 
                 if (newEntities.Count > 0)
                 {
-                    await context.GuestLists.AddRangeAsync(newEntities, stoppingToken);
+                    await context.Guests.AddRangeAsync(newEntities, stoppingToken);
                     await context.SaveChangesAsync(stoppingToken);
 
                     _logger.LogInformation("💾 Inserted {Count} new guest list(s): {Ids}",
