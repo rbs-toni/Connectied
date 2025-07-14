@@ -1,4 +1,5 @@
-﻿using Connectied.Application.Common.Paging;
+﻿using System;
+using Connectied.Application.Common.Paging;
 
 namespace Connectied.Application.Common.Specifications;
 public class EntitiesByPaginationFilterSpec<T, TResult> : EntitiesByBaseFilterSpec<T, TResult>

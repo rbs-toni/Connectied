@@ -21,7 +21,7 @@ class GetGuestListHandler : IQueryHandler<GetGuestList, Result<IReadOnlyCollecti
         try
         {
             var guestLists = await _guestListRepository.ListAsync(cancellationToken);
-            var guestListDtos = guestLists.Select(gl => new GuestDto
+            var guestListDtos = guestLists.ConvertAll(gl => new GuestDto
             {
                 Id = gl.Id,
                 Name = gl.Name,
@@ -36,7 +36,7 @@ class GetGuestListHandler : IQueryHandler<GetGuestList, Result<IReadOnlyCollecti
                 Event2GiftCount = gl.Event2GiftCount,
                 Event2Souvenir = gl.Event2Souvenir,
                 Notes = gl.Notes
-            }).ToList();
+            });
             return Result.Success<IReadOnlyCollection<GuestDto>>(guestListDtos);
         }
         catch (Exception ex)

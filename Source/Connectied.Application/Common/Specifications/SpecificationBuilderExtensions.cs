@@ -1,4 +1,5 @@
-﻿using Ardalis.Specification;
+﻿using System;
+using Ardalis.Specification;
 using Connectied.Application.Common.Paging;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -41,7 +42,7 @@ public static class SpecificationBuilderExtensions
                 .Add(new WhereExpressionInfo<T>(Expression.Lambda<Func<T, bool>>(binaryExpresioFilter, parameter)));
         }
 
-        return (IOrderedSpecificationBuilder<T>)specificationBuilder.Specification;
+        return (IOrderedSpecificationBuilder<T>)specificationBuilder;
     }
     public static IOrderedSpecificationBuilder<T> AdvancedSearch<T>(
         this ISpecificationBuilder<T> specificationBuilder,
@@ -129,34 +130,36 @@ public static class SpecificationBuilderExtensions
 
     public static ISpecificationBuilder<T> PaginateBy<T>(this ISpecificationBuilder<T> query, PaginationFilter filter)
     {
-        if (filter.Page.HasValue && filter.PageSize.HasValue)
+        // Ensure PageSize is positive, if not, return all data (no pagination)
+        if (filter.PageSize <= 0)
         {
-            // Ensure PageSize is positive, if not, return all data (no pagination)
-            if (filter.PageSize <= 0)
-            {
-                return query; // No pagination applied
-            }
-
-            // Ensure Page is valid, default to 1 if it's less than or equal to 0
-            if (filter.Page <= 0)
-            {
-                filter.Page = 1;  // Default to the first page
-            }
-
-            // Apply pagination logic if Page is valid and greater than 1
-            query = query.Skip((filter.Page.Value - 1) * filter.PageSize.Value);
-
-            return query.Take(filter.PageSize.Value);
+            return query; // No pagination applied
         }
-        return query;
+
+        // Ensure Page is valid, default to 1 if it's less than or equal to 0
+        if (filter.Page <= 0)
+        {
+            filter.Page = 1;  // Default to the first page
+        }
+
+        // Apply pagination logic if Page is valid and greater than 1
+        query = query.Skip((filter.Page - 1) * filter.PageSize);
+
+        return query.Take(filter.PageSize);
     }
-    public static ISpecificationBuilder<T> SearchBy<T>(this ISpecificationBuilder<T> query, BaseFilter filter) => query
+    public static ISpecificationBuilder<T> SearchBy<T>(this ISpecificationBuilder<T> query, BaseFilter filter)
+    {
+        return query
             .SearchByKeyword(filter.Keyword)
-        .AdvancedSearch(filter.AdvancedSearch)
-        .AdvancedFilter(filter.AdvancedFilter);
+            .AdvancedSearch(filter.AdvancedSearch)
+            .AdvancedFilter(filter.AdvancedFilter);
+    }
     public static IOrderedSpecificationBuilder<T> SearchByKeyword<T>(
         this ISpecificationBuilder<T> specificationBuilder,
-        string? keyword) => specificationBuilder.AdvancedSearch(new Search { Keyword = keyword });
+        string? keyword)
+    {
+        return specificationBuilder.AdvancedSearch(new Search { Keyword = keyword });
+    }
 
     static void AddSearchPropertyByKeyword<T>(
         this ISpecificationBuilder<T> specificationBuilder,

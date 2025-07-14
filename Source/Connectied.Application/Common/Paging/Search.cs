@@ -1,3 +1,4 @@
+using System;
 
 namespace Connectied.Application.Common.Paging;
 public class Search

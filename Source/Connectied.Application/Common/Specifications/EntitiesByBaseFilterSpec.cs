@@ -1,4 +1,5 @@
-﻿using Ardalis.Specification;
+﻿using System;
+using Ardalis.Specification;
 using Connectied.Application.Common.Paging;
 
 namespace Connectied.Application.Common.Specifications;

@@ -1,9 +1,10 @@
+using System;
 
 namespace Connectied.Application.Common.Paging;
 public class PaginationFilter : BaseFilter
 {
-    public int? Page { get; set; } = 1;
-    public int? PageSize { get; set; } = -1;
+    public int Page { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
     public string[]? OrderBy { get; set; }
 }
 

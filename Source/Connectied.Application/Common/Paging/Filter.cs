@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Connectied.Application.Common.Paging;
 public static class FilterLogic
 {

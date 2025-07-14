@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using System;
+using Mapster;
 
 namespace Connectied.Application.Common.Paging;
 public record PagedList<T>(IReadOnlyCollection<T> Items, int Page, int PageSize, int TotalCount) : IPagedList<T>
