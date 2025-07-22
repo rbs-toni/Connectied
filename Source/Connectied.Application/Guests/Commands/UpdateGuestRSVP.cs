@@ -1,14 +1,13 @@
 ﻿using Ardalis.Result;
 using Connectied.Application.Contracts;
-using System;
+using Connectied.Domain.Guests;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Connectied.Application.Guests.Commands;
-public class UpdateGuest : ICommand<Result<string>>
+public record UpdateGuestRSVP : ICommand<Result<string>>
 {
     [NotNull]
     public string? Id { get; set; }
-    public string? Name { get; set; }
-    public string? Group { get; set; }
+    public GuestRSVPStatus Event1Status { get; set; }
+    public GuestRSVPStatus Event2Status { get; set; }
 }

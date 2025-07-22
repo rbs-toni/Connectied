@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 
 namespace Connectied.Server.Endpoints;
-public class Dashboard : EndpointGroupBase
+public class Statistics : EndpointGroupBase
 {
     public override void Map(WebApplication app)
     {

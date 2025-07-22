@@ -1,6 +1,8 @@
 ﻿using Ardalis.Result;
 using Connectied.Application.Repositories;
+using Connectied.Domain.Events;
 using Connectied.Domain.Guests;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -33,6 +35,7 @@ class CreateGuestHandler : IRequestHandler<CreateGuest, Result<string>>
                 ParentId = request.Parent,
                 GroupId = request.Group
             };
+            guest.AddDomainEvent(new GuestCreatedEvent(guest));
             await _repository.AddAsync(guest, cancellationToken);
             return Result.Success(guest.Id);
         }
@@ -41,5 +44,14 @@ class CreateGuestHandler : IRequestHandler<CreateGuest, Result<string>>
             _logger.LogError(ex, "An error occurred while creating guest.");
             return Result.Error("An error occurred while creating guest.");
         }
+    }
+}
+
+sealed class CreateGuestValidator : AbstractValidator<Guest>
+{
+    public CreateGuestValidator()
+    {
+        RuleFor(x => x.Name).NotEmpty();
+        RuleFor(x => x.Name).MaximumLength(50);
     }
 }

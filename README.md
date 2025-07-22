@@ -62,3 +62,33 @@ The following prerequisites are required to build and run the solution:
   For auto-generating interactive API documentation.
 
 ---
+
+## ✅ Features
+
+### 🧾 Guest List Management
+- Create guest lists
+- View guest lists from the database
+- Import guest lists from external sources (e.g. CSV)
+- Update existing guest lists
+- Delete guest lists
+
+### ⚙️ Guest List Configuration
+- Create configurations for guest lists (columns, filters, etc.)
+- Update guest list configurations
+- Delete configurations
+
+### 🔄 Realtime Updates
+- Realtime guest list updates using **SignalR**
+
+### 📩 RSVP Management
+- Mark guests as attending or not attending
+- Manage RSVP status per event
+
+### ✅ Check-In System
+- Check guests in at the event
+- Track attendance in real-time
+
+### 📊 Statistics
+- View invitation stats: invited, attending, not attending
+- View angpao/gift totals
+- Track souvenirs distributed

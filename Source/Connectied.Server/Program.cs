@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Connectied.Application;
 using Connectied.Application.Hubs;
@@ -34,17 +35,30 @@ public static class Program
             // Add services to the container.
             builder.Services.AddAuthorization();
 
-            builder.Services.AddHttpClient<IGuestHttpClient,GuestHttpClient>(client => client.BaseAddress = new Uri("https://dummyjson.com/c/"));
+            builder.Services
+                .AddHttpClient<IGuestHttpClient, GuestHttpClient>(
+                    client => client.BaseAddress = new Uri("https://dummyjson.com/c/"));
 
             builder.Services.AddSignalR();
             builder.Services.AddScoped<IGuestListNotifier, SignalRGuestListNotifier>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Version = "v1", Title = "Connectied API", Description = "Connectied API" });
-            });
+            builder.Services
+                .AddSwaggerGen(
+                    options =>
+                    {
+                        options.SwaggerDoc(
+                            "v1",
+                            new OpenApiInfo
+                            {
+                                Version = "v1",
+                                Title = "Connectied API",
+                                Description = "Connectied API"
+                            });
+                        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                    });
 
             var app = builder.Build();
 
@@ -53,7 +67,10 @@ public static class Program
             await dbInitializer.MigrateAsync();
             await dbInitializer.SeedAsync();
 
-            app.UseExceptionHandler(opts => { });
+            app.UseExceptionHandler(
+                opts =>
+                {
+                });
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

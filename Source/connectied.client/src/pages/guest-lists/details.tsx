@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, Link } from "react-router-dom"
 import { useBreadcrumb } from "@/hooks/use-breadcrumb"
 import { client } from "@/api"
 import type { GuestListWithGuests, Guest } from "@/types"
@@ -28,7 +28,6 @@ export default function DetailsGuestListPage() {
 
     useEffect(() => {
         if (!id) return
-
         const fetchData = async () => {
             try {
                 const data = await client.getGuestListWithGuests(id)
@@ -39,7 +38,6 @@ export default function DetailsGuestListPage() {
                 setIsLoading(false)
             }
         }
-
         fetchData()
     }, [id])
 
@@ -85,24 +83,49 @@ export default function DetailsGuestListPage() {
         }
     }
 
-    if (isLoading || !guestList) return <p>Loading guest list...</p>
+    if (isLoading || !guestList) return <p className="text-sm text-muted-foreground">Loading guest list...</p>
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-xl font-semibold">{guestList.name}</h1>
-                <div className="space-x-2">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-semibold">{guestList.name}</h1>
+                    <p className="text-muted-foreground text-sm">{guestList.id}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                    <Button asChild>
+                        <Link to={`/guest-lists/guests/${guestList.linkCode}`}>Open Public View</Link>
+                    </Button>
                     <Button onClick={() => navigate(`/guest-lists/edit/${guestList.id}`)}>Edit</Button>
-                    <Button variant="destructive" onClick={() => navigate(`/guest-lists/delete/${guestList.id}`)}>Delete</Button>
+                    <Button
+                        variant="destructive"
+                        onClick={() => navigate(`/guest-lists/delete/${guestList.id}`)}
+                    >
+                        Delete
+                    </Button>
                 </div>
             </div>
 
             <Card>
-                <CardContent className="pt-4 space-y-2">
-                    <div><strong>Columns:</strong> {selectedColumns.join(", ") || "-"}</div>
-                    <div><strong>Groups:</strong> {guestList.configuration?.groups?.length ? guestList.configuration.groups.join(", ") : "-"}</div>
-                    <div><strong>Included Guests:</strong> {guestList.configuration?.includedGuests?.length || 0}</div>
-                    <div><strong>Excluded Guests:</strong> {guestList.configuration?.excludedGuests?.length || 0}</div>
+                <CardContent className="pt-4 grid gap-3 text-sm">
+                    <div>
+                        <span className="font-medium">Columns:</span>{" "}
+                        {selectedColumns.length ? selectedColumns.join(", ") : <span className="text-muted-foreground">-</span>}
+                    </div>
+                    <div>
+                        <span className="font-medium">Groups:</span>{" "}
+                        {guestList.configuration?.groups?.length
+                            ? guestList.configuration.groups.join(", ")
+                            : <span className="text-muted-foreground">-</span>}
+                    </div>
+                    <div>
+                        <span className="font-medium">Included Guests:</span>{" "}
+                        {guestList.configuration?.includedGuests?.length || 0}
+                    </div>
+                    <div>
+                        <span className="font-medium">Excluded Guests:</span>{" "}
+                        {guestList.configuration?.excludedGuests?.length || 0}
+                    </div>
                 </CardContent>
             </Card>
 
@@ -125,7 +148,9 @@ export default function DetailsGuestListPage() {
                                     {filteredGuests.map((guest) => (
                                         <TableRow key={guest.id}>
                                             {selectedColumns.map((col) => (
-                                                <TableCell key={col}>{renderGuestColumn(guest, col)}</TableCell>
+                                                <TableCell key={col}>
+                                                    {renderGuestColumn(guest, col)}
+                                                </TableCell>
                                             ))}
                                         </TableRow>
                                     ))}

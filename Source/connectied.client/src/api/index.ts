@@ -7,16 +7,17 @@
     GuestStats,
     Guest,
     GuestGroup,
-    GuestListWithGuests
+    GuestListWithGuests,
+    GuestGroupDetails
 } from "@/types"
 
 const BASE_URL = "/api"
 
 const endpoints = {
-    dashboard: `${BASE_URL}/dashboard`,
+    guestGroups: `${BASE_URL}/guest-groups`,
     guestLists: `${BASE_URL}/guest-lists`,
     guests: `${BASE_URL}/guests`,
-    guestGroups: `${BASE_URL}/guest-groups`
+    statistics: `${BASE_URL}/statistics`,
 }
 
 function toQueryString(params: Record<string, any>): string {
@@ -71,12 +72,16 @@ function del(url: string): Promise<Response> {
 export const client = {
     // 📊 Dashboard
     getGuestStats(): Promise<GuestStats> {
-        return get<GuestStats>(`${endpoints.dashboard}`)
+        return get<GuestStats>(`${endpoints.statistics}`)
     },
 
     // 👥 Guest Groups
     getGuestGroups(): Promise<GuestGroup[]> {
         return get<GuestGroup[]>(endpoints.guestGroups)
+    },
+
+    getGuestGroup(id: string): Promise<GuestGroupDetails> {
+        return get<GuestGroupDetails>(`${endpoints.guestGroups}/${id}`)
     },
 
     // 📋 Guest List
@@ -95,6 +100,10 @@ export const client = {
 
     getGuestListWithGuests(id: string): Promise<GuestListWithGuests> {
         return get<GuestListWithGuests>(`${endpoints.guestLists}/${id}`)
+    },
+
+    getGuestListWithGuestsByCode(code: string): Promise<GuestListWithGuests> {
+        return get<GuestListWithGuests>(`${endpoints.guestLists}/guests/${code}`)
     },
 
     getGuestListByCode(code: string): Promise<GuestList> {

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Connectied.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ConnectiedDbContext))]
-    [Migration("20250717040657_Initial")]
+    [Migration("20250722124458_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -91,9 +91,6 @@ namespace Connectied.Infrastructure.Persistence.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 
-                    b.Property<bool>("CheckedIn")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -102,6 +99,9 @@ namespace Connectied.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("Event1Attendance")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Event1CheckedIn")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Event1Gift")
                         .HasColumnType("int");
@@ -123,6 +123,9 @@ namespace Connectied.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("Event2Attendance")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Event2CheckedIn")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Event2Gift")
                         .HasColumnType("int");
@@ -199,6 +202,9 @@ namespace Connectied.Infrastructure.Persistence.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 
+                    b.Property<string>("EventName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("GuestId")
                         .HasColumnType("nvarchar(36)");
 
@@ -242,15 +248,15 @@ namespace Connectied.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Connectied.Domain.Guests.GuestRegistry", b =>
                 {
                     b.HasOne("Connectied.Domain.Guests.Guest", null)
-                        .WithMany("Registries")
+                        .WithMany("EventRegistries")
                         .HasForeignKey("GuestId");
                 });
 
             modelBuilder.Entity("Connectied.Domain.Guests.Guest", b =>
                 {
-                    b.Navigation("Members");
+                    b.Navigation("EventRegistries");
 
-                    b.Navigation("Registries");
+                    b.Navigation("Members");
                 });
 
             modelBuilder.Entity("Connectied.Domain.Guests.GuestGroup", b =>

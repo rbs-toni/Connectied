@@ -9,7 +9,7 @@ namespace Connectied.Domain.Guests;
 public class Guest : BaseEntity, IAggregateRoot, IConcurrency
 {
     readonly List<Guest> _members = [];
-    readonly List<GuestRegistry> _registries = [];
+    readonly List<GuestRegistry> _eventRegistries = [];
 
     [MaxLength(100)]
     [ColumnViewable]
@@ -47,10 +47,11 @@ public class Guest : BaseEntity, IAggregateRoot, IConcurrency
     [ForeignKey(nameof(ParentId))]
     public Guest? Parent { get; set; }
     public IReadOnlyCollection<Guest> Members => _members.AsReadOnly();
-    public ICollection<GuestRegistry> Registries => _registries.AsReadOnly();
+    public ICollection<GuestRegistry> EventRegistries => _eventRegistries.AsReadOnly();
     public string? Notes { get; set; }
 
-    public bool CheckedIn { get; set; }
+    public bool Event1CheckedIn { get; set; }
+    public bool Event2CheckedIn { get; set; }
     [Timestamp]
     [NotNull]
     public byte[]? Version { get; set; }
@@ -65,16 +66,64 @@ public class Guest : BaseEntity, IAggregateRoot, IConcurrency
         member.Parent = this;
         member.ParentId = Id;
     }
-    public void AddRegistry(GuestRegistry registry)
+    void AddEvent1Registry(GuestRegistry registry)
     {
-        _registries.Add(registry);
+        _eventRegistries.Add(registry);
+        if (registry.Type == GuestRegistryType.Angpao)
+        {
+            Event1Angpao += registry.Quantity;
+        }
+        else if (registry.Type == GuestRegistryType.Gift)
+        {
+            Event1Gift += registry.Quantity;
+        }
     }
-    public void CheckIn()
+    void AddEvent2Registry(GuestRegistry registry)
     {
-        if (CheckedIn)
+        _eventRegistries.Add(registry);
+        if (registry.Type == GuestRegistryType.Angpao)
+        {
+            Event2Angpao += registry.Quantity;
+        }
+        else if (registry.Type == GuestRegistryType.Gift)
+        {
+            Event2Gift += registry.Quantity;
+        }
+    }
+
+    public void CheckInEvent1(List<GuestRegistry>? registries)
+    {
+        if (Event1CheckedIn)
         {
             return;
         }
-        CheckedIn = true;
+        if (registries?.Count > 0)
+        {
+            foreach (var item in registries)
+            {
+                AddEvent1Registry(item);
+            }
+        }
+        Event1CheckedIn = true;
+        Event1Attendance++;
+        Event1Souvenir++;
+    }
+
+    public void CheckInEvent2(List<GuestRegistry>? registries)
+    {
+        if (Event2CheckedIn)
+        {
+            return;
+        }
+        if (registries?.Count > 0)
+        {
+            foreach (var item in registries)
+            {
+                AddEvent2Registry(item);
+            }
+        }
+        Event2CheckedIn = true;
+        Event2Attendance++;
+        Event2Souvenir++;
     }
 }

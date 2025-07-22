@@ -1,7 +1,9 @@
 ﻿using Ardalis.Result;
+using Ardalis.Specification;
 using Connectied.Application.Contracts;
 using Connectied.Application.Repositories;
 using Connectied.Domain.Guests;
+using FluentValidation;
 using Mapster;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,8 +12,8 @@ using System.Linq;
 namespace Connectied.Application.Guests.Queries;
 class GetGuestGroupsHandler : IQueryHandler<GetGuestGroups, Result<IReadOnlyCollection<GuestGroupDto>>>
 {
-    readonly IReadRepository<GuestGroup> _repository;
     readonly ILogger<GetGuestGroupsHandler> _logger;
+    readonly IReadRepository<GuestGroup> _repository;
 
     public GetGuestGroupsHandler(IReadRepository<GuestGroup> repository, ILogger<GetGuestGroupsHandler> logger)
     {
@@ -40,5 +42,23 @@ class GetGuestGroupsHandler : IQueryHandler<GetGuestGroups, Result<IReadOnlyColl
             _logger.LogError(ex, "Error retrieving guest groups.");
             return Result.Error("An error occurred while retrieving guest groups.");
         }
+    }
+}
+sealed class GetGuestGroupSpecs : Specification<GuestGroup>
+{
+    public GetGuestGroupSpecs(string id)
+    {
+        Query
+            .AsNoTracking()
+            .Where(x => x.Id == id)
+            .Include(x => x.Guests);
+    }
+}
+sealed class GetGuestGroupValidator : AbstractValidator<GetGuestGroup>
+{
+    public GetGuestGroupValidator()
+    {
+        RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Id is required.");
     }
 }

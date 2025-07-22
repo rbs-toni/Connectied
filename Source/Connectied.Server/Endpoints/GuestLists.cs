@@ -13,6 +13,7 @@ public class GuestLists : EndpointGroupBase
         app.MapGroup(this)
             .MapGet(GetGuestLists)
             .MapGet(GetGuestList, "/{id}")
+            .MapGet(GetGuestsFromGuestList, "/{code}/guests")
             .MapPost(CreateGuestList)
             .MapPut(UpdateGuestList, "/{id}")
             .MapDelete(DeleteGuestList, "/{id}");
@@ -25,6 +26,11 @@ public class GuestLists : EndpointGroupBase
     async Task<IResult> GetGuestList([FromServices] ISender sender, string id)
     {
         var result = await sender.Send(new GetGuestListWithGuests(id));
+        return result.ToMinimalApiResult();
+    }
+    async Task<IResult> GetGuestsFromGuestList([FromServices] ISender sender, string code)
+    {
+        var result = await sender.Send(new GetGuestListWithGuestsByCode(code));
         return result.ToMinimalApiResult();
     }
     async Task<IResult> CreateGuestList([FromServices] ISender sender, [FromBody] CreateGuestList create)

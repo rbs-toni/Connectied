@@ -8,6 +8,12 @@ interface GuestGroup {
     name: string
 }
 
+interface GuestGroupDetails {
+    id: string
+    name: string
+    guests?: Guest[]
+}
+
 interface Guest {
     id: string
     name: string
@@ -132,6 +138,7 @@ export type {
     BreadcrumbItem,
     Guest,
     GuestGroup,
+    GuestGroupDetails,
     CreateGuest,
     UpdateGuest,
     GuestListConfiguration,

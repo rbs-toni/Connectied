@@ -70,7 +70,8 @@ namespace Connectied.Infrastructure.Persistence.Migrations
                     Event2RSVPStatus = table.Column<int>(type: "int", nullable: false),
                     ParentId = table.Column<string>(type: "nvarchar(36)", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CheckedIn = table.Column<bool>(type: "bit", nullable: false),
+                    Event1CheckedIn = table.Column<bool>(type: "bit", nullable: false),
+                    Event2CheckedIn = table.Column<bool>(type: "bit", nullable: false),
                     Version = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
@@ -118,6 +119,7 @@ namespace Connectied.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: false),
+                    EventName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     GuestId = table.Column<string>(type: "nvarchar(36)", nullable: true)

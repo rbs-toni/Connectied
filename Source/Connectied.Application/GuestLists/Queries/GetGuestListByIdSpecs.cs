@@ -12,3 +12,14 @@ class GetGuestListByIdSpecs : Specification<GuestList>
             .Where(gl => gl.Id == id);
     }
 }
+
+class GetGuestListByCodeSpecs : Specification<GuestList>
+{
+    public GetGuestListByCodeSpecs(string code)
+    {
+        Query
+            .AsNoTracking()
+            .Include(x => x.Configuration)
+            .Where(gl => gl.LinkCode == code);
+    }
+}

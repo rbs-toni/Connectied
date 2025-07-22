@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using Connectied.Application.Contracts;
 using Connectied.Application.Repositories;
+using Connectied.Domain.Events;
 using Connectied.Domain.Guests;
 using Microsoft.Extensions.Logging;
 
@@ -24,6 +25,7 @@ class DeleteGuestHandler : ICommandHandler<DeleteGuest, Result>
             {
                 return Result.NotFound();
             }
+            guest.AddDomainEvent(new GuestDeletedEvent(guest));
             await _repository.DeleteAsync(guest, cancellationToken);
             return Result.Success();
         }

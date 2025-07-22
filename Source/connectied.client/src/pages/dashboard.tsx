@@ -10,9 +10,16 @@ import {
     CardContent
 } from "@/components/ui/card"
 import { Pie, PieChart, Label, Cell } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
+import {
+    ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
+    ChartTooltip,
+    ChartTooltipContent,
+    type ChartConfig
+} from "@/components/ui/chart"
 
-const pieColors = ["#4f46e5", "#22c55e"]
+const pieColors = ["#4f46e5", "#22c55e", "#f97316"]
 
 const chartConfig = {
     event1: { label: "Event 1", color: pieColors[0] },
@@ -48,11 +55,76 @@ export default function DashboardPage() {
     }, [setBreadcrumbItems])
 
     if (isLoading) return <p>Loading guest statistics...</p>
-
     if (!guestStats) return null
+
+    const notComing = guestStats.quota - guestStats.attendance
+    const undanganChartData = [
+        { name: "Hadir", value: guestStats.attendance },
+        { name: "Tidak Hadir", value: notComing },
+    ]
 
     return (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <Card className="@container/card">
+                <CardHeader>
+                    <CardDescription>Undangan</CardDescription>
+                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                        {guestStats.quota.toLocaleString()}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ChartContainer config={{ hadir: { label: "Hadir", color: pieColors[0] }, tidak: { label: "Tidak Hadir", color: pieColors[2] } }} className="mx-auto aspect-square max-h-[250px]">
+                        <PieChart>
+                            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                            <Pie
+                                data={undanganChartData}
+                                dataKey="value"
+                                nameKey="name"
+                                innerRadius={60}
+                                strokeWidth={5}
+                            >
+                                {undanganChartData.map((entry, index) => (
+                                    <Cell key={`cell-undangan-${index}`} fill={pieColors[index % pieColors.length]} />
+                                ))}
+                                <Label
+                                    content={({ viewBox }) => {
+                                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                                            return (
+                                                <text
+                                                    x={viewBox.cx}
+                                                    y={viewBox.cy}
+                                                    textAnchor="middle"
+                                                    dominantBaseline="middle"
+                                                >
+                                                    <tspan
+                                                        x={viewBox.cx}
+                                                        y={viewBox.cy}
+                                                        className="fill-foreground text-3xl font-bold"
+                                                    >
+                                                        {guestStats.quota.toLocaleString()}
+                                                    </tspan>
+                                                    <tspan
+                                                        x={viewBox.cx}
+                                                        y={(viewBox.cy || 0) + 24}
+                                                        className="fill-muted-foreground"
+                                                    >
+                                                        Diundang
+                                                    </tspan>
+                                                </text>
+                                            )
+                                        }
+                                    }}
+                                />
+                            </Pie>
+                            <ChartLegend
+                                content={<ChartLegendContent nameKey="name" />}
+                                className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+                            />
+                        </PieChart>
+                    </ChartContainer>
+                </CardContent>
+            </Card>
+
             {[
                 {
                     title: "Attendance",
@@ -84,7 +156,7 @@ export default function DashboardPage() {
                     total: guestStats.quota,
                     unit: "Quota",
                 },
-            ].map(({ title, data, total, unit }, i) => (
+            ].map(({ title, data, total, unit }) => (
                 <Card key={title} className="@container/card">
                     <CardHeader>
                         <CardDescription>{title}</CardDescription>
@@ -95,7 +167,7 @@ export default function DashboardPage() {
                     <CardContent>
                         <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
                             <PieChart>
-                                <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                                <ChartTooltip cursor={false} content={<ChartTooltipContent  />} />
                                 <Pie
                                     data={data}
                                     dataKey="value"
@@ -136,6 +208,10 @@ export default function DashboardPage() {
                                         }}
                                     />
                                 </Pie>
+                                <ChartLegend
+                                    content={<ChartLegendContent nameKey="name" />}
+                                    className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+                                />
                             </PieChart>
                         </ChartContainer>
                     </CardContent>
