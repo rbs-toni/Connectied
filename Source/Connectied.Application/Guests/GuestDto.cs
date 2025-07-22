@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Connectied.Domain.Guests;
 
 namespace Connectied.Application.Guests;
 public record GuestDto
@@ -21,5 +22,9 @@ public record GuestDto
     public int Event2Gift { get; set; }
     public int Event1Souvenir { get; set; }
     public int Event2Souvenir { get; set; }
+    public bool Event1CheckedIn { get; set; }
+    public bool Event2CheckedIn { get; set; }
+    public GuestRSVPStatus Event1RSVPStatus { get; set; }
+    public GuestRSVPStatus Event2RSVPStatus { get; set; }
     public string? Notes { get; set; }
 }

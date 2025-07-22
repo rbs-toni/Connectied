@@ -33,7 +33,7 @@ sealed class CheckInEvent1Handler : ICommandHandler<CheckInEvent1, Result<string
             List<GuestRegistry> guestRegistries = [];
             if (request.Registries?.Count > 0)
             {
-                foreach (var item in guestRegistries)
+                foreach (var item in request.Registries)
                 {
                     guestRegistries.Add(new GuestRegistry()
                     {

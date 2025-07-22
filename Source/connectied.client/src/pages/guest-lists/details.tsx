@@ -15,9 +15,44 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-
+import { toast } from "sonner"
+import { CopyIcon } from "lucide-react"
+import { Badge } from "../../components/ui/badge"
+type PublicLinkTextProps = {
+    linkCode?: string
+}
 const AVAILABLE_COLUMNS = ["Name", "Group", "Email", "Phone"]
+function PublicLinkText({ linkCode }: PublicLinkTextProps) {
+    const path = `/guest-lists/${linkCode}/guests`
+    const fullUrl = `${window.location.origin}${path}`
 
+    const handleCopy = () => {
+        navigator.clipboard.writeText(fullUrl)
+        toast.success("Public link copied")
+    }
+
+
+    return (
+        <div className="flex items-center gap-2">
+            <a
+                href={fullUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-blue-600 hover:underline break-all"
+            >
+                {fullUrl}
+            </a>
+            <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleCopy}
+                className="shrink-0"
+            >
+                <CopyIcon className="w-4 h-4" />
+            </Button>
+        </div>
+    )
+}
 export default function DetailsGuestListPage() {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
@@ -91,10 +126,11 @@ export default function DetailsGuestListPage() {
                 <div>
                     <h1 className="text-2xl font-semibold">{guestList.name}</h1>
                     <p className="text-muted-foreground text-sm">{guestList.id}</p>
+                    <PublicLinkText linkCode={guestList.linkCode} />
                 </div>
                 <div className="flex flex-wrap gap-2">
                     <Button asChild>
-                        <Link to={`/guest-lists/guests/${guestList.linkCode}`}>Open Public View</Link>
+                        <Link to={`/guest-lists/${guestList.linkCode}/guests`}>Open Public View</Link>
                     </Button>
                     <Button onClick={() => navigate(`/guest-lists/edit/${guestList.id}`)}>Edit</Button>
                     <Button
@@ -107,24 +143,59 @@ export default function DetailsGuestListPage() {
             </div>
 
             <Card>
-                <CardContent className="pt-4 grid gap-3 text-sm">
-                    <div>
-                        <span className="font-medium">Columns:</span>{" "}
-                        {selectedColumns.length ? selectedColumns.join(", ") : <span className="text-muted-foreground">-</span>}
-                    </div>
-                    <div>
-                        <span className="font-medium">Groups:</span>{" "}
-                        {guestList.configuration?.groups?.length
-                            ? guestList.configuration.groups.join(", ")
-                            : <span className="text-muted-foreground">-</span>}
-                    </div>
-                    <div>
-                        <span className="font-medium">Included Guests:</span>{" "}
-                        {guestList.configuration?.includedGuests?.length || 0}
-                    </div>
-                    <div>
-                        <span className="font-medium">Excluded Guests:</span>{" "}
-                        {guestList.configuration?.excludedGuests?.length || 0}
+                <CardContent className="text-sm">
+                    <div className="grid gap-y-3 gap-x-4 grid-cols-[150px_1fr]">
+                        <div className="text-muted-foreground font-medium self-start pt-1">Columns:</div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {selectedColumns.length ? (
+                                selectedColumns.map(col => (
+                                    <Badge key={col} variant="secondary">
+                                        {col}
+                                    </Badge>
+                                ))
+                            ) : (
+                                <Badge variant="outline">-</Badge>
+                            )}
+                        </div>
+
+                        <div className="text-muted-foreground font-medium self-start pt-1">Groups:</div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {guestList.configuration?.groups?.length ? (
+                                guestList.configuration.groups.map(group => (
+                                    <Badge key={group} variant="secondary">
+                                        {group}
+                                    </Badge>
+                                ))
+                            ) : (
+                                <Badge variant="outline">-</Badge>
+                            )}
+                        </div>
+
+                        <div className="text-muted-foreground font-medium self-start pt-1">Included Guests:</div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {guestList.configuration?.includedGuests?.length ? (
+                                guestList.configuration.includedGuests.map(id => (
+                                    <Badge key={id} variant="secondary">
+                                        {id}
+                                    </Badge>
+                                ))
+                            ) : (
+                                <Badge variant="outline">-</Badge>
+                            )}
+                        </div>
+
+                        <div className="text-muted-foreground font-medium self-start pt-1">Excluded Guests:</div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {guestList.configuration?.excludedGuests?.length ? (
+                                guestList.configuration.excludedGuests.map(id => (
+                                    <Badge key={id} variant="secondary">
+                                        {id}
+                                    </Badge>
+                                ))
+                            ) : (
+                                <Badge variant="outline">-</Badge>
+                            )}
+                        </div>
                     </div>
                 </CardContent>
             </Card>
@@ -132,7 +203,7 @@ export default function DetailsGuestListPage() {
             <div>
                 <h2 className="text-lg font-semibold">Guests</h2>
                 <Card className="mt-2">
-                    <CardContent className="pt-4 overflow-x-auto">
+                    <CardContent className="overflow-x-auto">
                         {filteredGuests.length === 0 ? (
                             <p className="text-muted-foreground">No guests matched this configuration.</p>
                         ) : (

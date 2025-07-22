@@ -21,6 +21,6 @@ public class GuestListCreatedEventHandler : INotificationHandler<GuestListCreate
     {
         _logger.LogInformation("Connectied Domain Event: {DomainEvent}", notification.GetType().Name);
 
-        await _notifier.NotifyGuestListUpdated(notification.GuestList.Id);
+        await _notifier.NotifyGuestListCreated(notification.GuestList.Id);
     }
 }

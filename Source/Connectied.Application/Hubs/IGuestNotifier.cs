@@ -1,5 +1,4 @@
 ﻿namespace Connectied.Application.Hubs;
-
 public interface IGuestNotifier
 {
     Task NotifyGuestCreated(string id);

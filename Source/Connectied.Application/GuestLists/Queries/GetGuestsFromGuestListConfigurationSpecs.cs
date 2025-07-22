@@ -13,20 +13,25 @@ sealed class GetGuestsFromGuestListConfigurationSpecs : Specification<Guest>
             .AsNoTracking()
             .Include(x => x.Group);
 
-        var hasGroups = config.Groups != null && config.Groups.Any();
-        var hasIncluded = config.IncludedGuests != null && config.IncludedGuests.Any();
-        var hasExcluded = config.ExcludedGuests != null && config.ExcludedGuests.Any();
+        var hasGroups = config.Groups != null && config.Groups.Count != 0;
+        var hasIncluded = config.IncludedGuests != null && config.IncludedGuests.Count != 0;
+        var hasExcluded = config.ExcludedGuests != null && config.ExcludedGuests.Count != 0;
 
-        if (hasGroups)
+        // If no groups and no included guests, return nothing
+        if (!hasGroups && !hasIncluded)
         {
-            Query.Where(g => g.Group != null && config.Groups.Contains(g.Group.Id));
+            Query.Where(_ => false);
+            return;
         }
 
-        if (hasIncluded)
-        {
-            Query.Where(g => config.IncludedGuests.Contains(g.Id));
-        }
-        else if (hasExcluded)
+        // Include guests that are in groups or explicitly included
+        Query.Where(g =>
+            (hasGroups && g.Group != null && config.Groups.Contains(g.Group.Id)) ||
+            (hasIncluded && config.IncludedGuests.Contains(g.Id))
+        );
+
+        // Exclude guests explicitly
+        if (hasExcluded)
         {
             Query.Where(g => !config.ExcludedGuests.Contains(g.Id));
         }

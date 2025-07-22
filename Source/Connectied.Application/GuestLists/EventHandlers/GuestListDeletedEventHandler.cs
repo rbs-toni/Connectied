@@ -6,8 +6,6 @@ using System;
 using System.Linq;
 
 namespace Connectied.Application.GuestLists.EventHandlers;
-
-
 public class GuestListDeletedEventHandler : INotificationHandler<GuestListDeletedEvent>
 {
     readonly ILogger<GuestListDeletedEventHandler> _logger;

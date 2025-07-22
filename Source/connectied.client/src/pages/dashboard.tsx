@@ -18,6 +18,7 @@ import {
     ChartTooltipContent,
     type ChartConfig
 } from "@/components/ui/chart"
+import { useGuestLiveUpdate } from "@/hooks/use-guest-live-update"
 
 const pieColors = ["#4f46e5", "#22c55e", "#f97316"]
 
@@ -36,23 +37,42 @@ export default function DashboardPage() {
     const [isLoading, setIsLoading] = useState(true)
     const { setItems: setBreadcrumbItems } = useBreadcrumb()
 
-    useEffect(() => {
-        const loadGuestStats = async () => {
-            try {
-                const data = await client.getGuestStats()
-                setGuestStats(data)
-            } catch (error) {
-                console.error("Failed to fetch guest stats", error)
-            } finally {
-                setIsLoading(false)
-            }
+    const loadInitialGuestStats = async () => {
+        try {
+            const data = await client.getGuestStats()
+            setGuestStats(data)
+        } catch (error) {
+            console.error("[Dashboard] Initial fetch failed:", error)
+        } finally {
+            setIsLoading(false)
         }
-        loadGuestStats()
+    }
+
+    const updateGuestStats = async (source: string) => {
+        console.debug(`[Dashboard] 🔄 Live update triggered by: ${source}`)
+        try {
+            const data = await client.getGuestStats()
+            setGuestStats(data)
+            console.debug("[Dashboard] ✅ Live update success:", data)
+        } catch (error) {
+            console.error("[Dashboard] ❌ Live update failed:", error)
+        }
+    }
+
+    useEffect(() => {
+        loadInitialGuestStats()
     }, [])
+
 
     useEffect(() => {
         setBreadcrumbItems([{ title: "Dashboard" }])
-    }, [setBreadcrumbItems])
+    }, [])
+
+    useGuestLiveUpdate({
+        onCreated: updateGuestStats,
+        onUpdated: updateGuestStats,
+        onDeleted: updateGuestStats,
+    })
 
     if (isLoading) return <p>Loading guest statistics...</p>
     if (!guestStats) return null

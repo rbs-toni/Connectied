@@ -13,6 +13,9 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
+import { useGuestLiveUpdate } from "@/hooks/use-guest-live-update"
+import { useGuestListLiveUpdate } from "@/hooks/use-guest-list-live-update"
+
 const columnKeyMap: Record<string, string> = {
     Name: "name",
     Group: "group.name",
@@ -28,10 +31,34 @@ export default function GuestListGuestsPage() {
     const { code } = useParams()
     const [guestList, setGuestList] = useState<GuestListWithGuests | null>(null)
 
+    // Initial load
     useEffect(() => {
         if (!code) return
         client.getGuestListWithGuestsByCode(code).then(setGuestList)
     }, [code])
+
+    // Refresh only guests, don't reload guest list metadata
+    const refreshGuestsOnly = async () => {
+        if (!code) return
+        const fresh = await client.getGuestListWithGuestsByCode(code)
+        setGuestList((prev) =>
+            prev ? { ...prev, guests: fresh.guests } : fresh
+        )
+    }
+
+    useGuestLiveUpdate({
+        onCreated: refreshGuestsOnly,
+        onUpdated: refreshGuestsOnly,
+        onDeleted: refreshGuestsOnly,
+    })
+
+    useGuestListLiveUpdate({
+        onUpdated: async () => {
+            if (!code) return
+            const fresh = await client.getGuestListWithGuestsByCode(code)
+            setGuestList(fresh)
+        },
+    })
 
     if (!guestList) return <p className="p-4">Loading...</p>
 

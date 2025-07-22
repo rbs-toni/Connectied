@@ -91,10 +91,10 @@ sealed class UpdateGuestListHandler : ICommandHandler<UpdateGuestList, Result<st
             if (!hasChanges)
             {
                 _logger.LogInformation("No changes detected for GuestList '{GuestListId}'", guestList.Id);
-                guestList.AddDomainEvent(new GuestListUpdatedEvent(guestList));
                 return Result.Success(guestList.Id); // no update needed
             }
 
+            guestList.AddDomainEvent(new GuestListUpdatedEvent(guestList));
             await _guestListRepository.UpdateAsync(guestList, cancellationToken);
             _logger.LogInformation("GuestList '{GuestListId}' updated successfully", guestList.Id);
 

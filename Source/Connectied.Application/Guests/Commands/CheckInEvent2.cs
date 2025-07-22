@@ -3,7 +3,6 @@ using Connectied.Application.Contracts;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Connectied.Application.Guests.Commands;
-
 public record CheckInEvent2 : ICommand<Result<string>>
 {
     [NotNull]

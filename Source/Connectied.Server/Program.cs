@@ -41,6 +41,7 @@ public static class Program
 
             builder.Services.AddSignalR();
             builder.Services.AddScoped<IGuestListNotifier, SignalRGuestListNotifier>();
+            builder.Services.AddScoped<IGuestNotifier, SignalRGuestNotifier>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -86,7 +87,8 @@ public static class Program
             app.UseAuthorization();
             app.MapEndpoints();
             app.MapFallbackToFile("/index.html");
-            app.MapHub<GuestListHub>("/hubs/guest-list");
+            app.MapHub<GuestListHub>("/hubs/guest-lists");
+            app.MapHub<GuestHub>("/hubs/guests");
             app.Run();
         }
         catch (Exception ex)

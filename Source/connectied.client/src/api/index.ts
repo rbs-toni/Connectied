@@ -103,7 +103,7 @@ export const client = {
     },
 
     getGuestListWithGuestsByCode(code: string): Promise<GuestListWithGuests> {
-        return get<GuestListWithGuests>(`${endpoints.guestLists}/guests/${code}`)
+        return get<GuestListWithGuests>(`${endpoints.guestLists}/${code}/guests`)
     },
 
     getGuestListByCode(code: string): Promise<GuestList> {

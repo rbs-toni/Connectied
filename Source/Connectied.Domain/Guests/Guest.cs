@@ -47,7 +47,7 @@ public class Guest : BaseEntity, IAggregateRoot, IConcurrency
     [ForeignKey(nameof(ParentId))]
     public Guest? Parent { get; set; }
     public IReadOnlyCollection<Guest> Members => _members.AsReadOnly();
-    public ICollection<GuestRegistry> EventRegistries => _eventRegistries.AsReadOnly();
+    public IReadOnlyCollection<GuestRegistry> EventRegistries => _eventRegistries.AsReadOnly();
     public string? Notes { get; set; }
 
     public bool Event1CheckedIn { get; set; }

@@ -6,7 +6,6 @@ using System;
 using System.Linq;
 
 namespace Connectied.Application.GuestLists.EventHandlers;
-
 public class GuestListUpdatedEventHandler : INotificationHandler<GuestListUpdatedEvent>
 {
     readonly ILogger<GuestListUpdatedEventHandler> _logger;

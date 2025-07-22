@@ -26,7 +26,7 @@ export default function App() {
                     <Route path="/guest-lists/delete/:id" element={<DeleteGuestListPage />} />
                 </Route>
                 <Route element={<PublicLayout />}>
-                    <Route path="/guest-lists/guests/:code" element={<GuestListGuestsPage />} />
+                    <Route path="/guest-lists/:code/guests/" element={<GuestListGuestsPage />} />
                 </Route>
             </Routes>
         </Router>

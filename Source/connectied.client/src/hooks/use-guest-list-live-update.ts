@@ -1,7 +1,7 @@
 ﻿import { useEffect, useRef } from "react"
 import { HubConnectionBuilder, type HubConnection } from "@microsoft/signalr"
 
-const HUB_URL = "/hubs/guest-list"
+const HUB_URL = "/hubs/guest-lists"
 
 export function useGuestListLiveUpdate(handlers: {
     onCreated?: (id: string) => void

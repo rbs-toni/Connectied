@@ -6,7 +6,7 @@ using System.Linq;
 namespace Connectied.Server.Hubs;
 public class SignalRGuestListNotifier : IGuestListNotifier
 {
-    private readonly IHubContext<GuestListHub, IGuestListClient> _hub;
+    readonly IHubContext<GuestListHub, IGuestListClient> _hub;
 
     public SignalRGuestListNotifier(IHubContext<GuestListHub, IGuestListClient> hub)
     {
@@ -15,11 +15,8 @@ public class SignalRGuestListNotifier : IGuestListNotifier
 
     public Task NotifyGuestListCreated(string id)
         => _hub.Clients.All.GuestListCreated(id);
-
-    public Task NotifyGuestListUpdated(string id)
-        => _hub.Clients.All.GuestListUpdated(id);
-
     public Task NotifyGuestListDeleted(string id)
         => _hub.Clients.All.GuestListDeleted(id);
+    public Task NotifyGuestListUpdated(string id)
+        => _hub.Clients.All.GuestListUpdated(id);
 }
-
