@@ -2,8 +2,10 @@
 using Connectied.Application.Repositories;
 using Connectied.Domain;
 using Connectied.Infrastructure.Persistence;
+using Connectied.Infrastructure.Persistence.Interceptors;
 using Connectied.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -12,6 +14,7 @@ using Serilog;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 
 namespace Connectied.Infrastructure;
 public static class ConfigureServices
@@ -22,6 +25,7 @@ public static class ConfigureServices
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         services.AddOptions<DatabaseOptions>()
             .BindConfiguration(nameof(DatabaseOptions))
             .ValidateOnStart()
@@ -34,6 +38,7 @@ public static class ConfigureServices
         services.AddDbContext<ConnectiedDbContext>(
             (sp, opts) =>
             {
+                opts.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                 var dbOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
                 if (string.IsNullOrWhiteSpace(dbOptions.Provider))
                 {
@@ -46,6 +51,13 @@ public static class ConfigureServices
                 opts.UseSqlServer(dbOptions.ConnectionString);
             });
 
+        var seederTypes = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => typeof(ISeeder).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract);
+        foreach (var seederType in seederTypes)
+        {
+            services.AddTransient(typeof(ISeeder), seederType);
+        }
 
         services.TryAddScoped<IDatabaseInitializer, DatabaseInitializer>();
         services.TryAddScoped(typeof(IRepository<>), typeof(EfRepository<>));

@@ -10,7 +10,9 @@ import {
     BreadcrumbPage
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
-import { useBreadcrumb } from "../hooks/use-breadcrumb"
+import { useBreadcrumb } from "@/hooks/use-breadcrumb"
+import { Link } from "react-router-dom"
+import { Fragment } from "react/jsx-runtime"
 
 export function AppHeader() {
     const { items } = useBreadcrumb()
@@ -22,17 +24,19 @@ export function AppHeader() {
                 <Separator orientation="vertical" className="mr-2 h-4" />
                 <Breadcrumb>
                     <BreadcrumbList>
-                        {items.map((item, i) => (
-                            <BreadcrumbItem key={i} className="hidden md:block">
-                                {item.href ? (
-                                    <>
-                                        <BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
-                                        {i < items.length - 1 && <BreadcrumbSeparator />}
-                                    </>
-                                ) : (
-                                    <BreadcrumbPage>{item.title}</BreadcrumbPage>
-                                )}
-                            </BreadcrumbItem>
+                        {items.map((item, index) => (
+                            <Fragment key={index}>
+                                <BreadcrumbItem className="hidden md:block">
+                                    {item.href ? (
+                                        <BreadcrumbLink asChild>
+                                            <Link to={item.href}>{item.title}</Link>
+                                        </BreadcrumbLink>
+                                    ) : (
+                                        <BreadcrumbPage>{item.title}</BreadcrumbPage>
+                                    )}
+                                </BreadcrumbItem>
+                                {index < items.length - 1 && <BreadcrumbSeparator />}
+                            </Fragment>
                         ))}
                     </BreadcrumbList>
                 </Breadcrumb>

@@ -1,8 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Connectied.Application;
+using Connectied.Application.Hubs;
 using Connectied.Application.Persistence;
 using Connectied.Infrastructure;
+using Connectied.Server.Hubs;
 using Connectied.Server.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -32,9 +34,10 @@ public static class Program
             // Add services to the container.
             builder.Services.AddAuthorization();
 
-            builder.Services.AddHttpClient<IGroupListsClient,GroupListsClient>(client => client.BaseAddress = new Uri("https://dummyjson.com/c/"));
+            builder.Services.AddHttpClient<IGuestHttpClient,GuestHttpClient>(client => client.BaseAddress = new Uri("https://dummyjson.com/c/"));
 
-            builder.Services.AddHostedService<GuestListsHostedService>();
+            builder.Services.AddSignalR();
+            builder.Services.AddScoped<IGuestListNotifier, SignalRGuestListNotifier>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -66,6 +69,7 @@ public static class Program
             app.UseAuthorization();
             app.MapEndpoints();
             app.MapFallbackToFile("/index.html");
+            app.MapHub<GuestListHub>("/hubs/guest-list");
             app.Run();
         }
         catch (Exception ex)

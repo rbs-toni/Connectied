@@ -23,3 +23,42 @@ The following prerequisites are required to build and run the solution:
 3. Run the project in Visual Studio using either:
    - **Start Debugging** (`F5`), or  
    - **Start Without Debugging** (`Ctrl + F5`)
+
+## 🧱 Technology Stack
+
+- **.NET 8.0** – Backend framework
+- **React + TypeScript** – Frontend framework
+- **Tailwind CSS** – Styling framework
+
+---
+
+## 📦 Backend Libraries
+
+- **MediatR**  
+  For managing commands and queries in a clean architecture style (CQRS).
+  
+- **Ardalis.GuardClauses**  
+  For implementing guard clauses to validate inputs and ensure code correctness.
+
+- **Ardalis.Result**  
+  For handling results in a consistent manner, providing structured success/error flows.
+
+- **Ardalis.Specification**  
+  For building reusable, composable query logic using specifications.
+
+- **FluentValidation**  
+  For validating inputs with a fluent API.
+
+- **Mapster**  
+  For fast and efficient object-to-object mapping.
+
+- **Entity Framework Core**  
+  For database access and object-relational mapping.
+
+- **Serilog**  
+  For structured logging.
+
+- **Swashbuckle (Swagger)**  
+  For auto-generating interactive API documentation.
+
+---

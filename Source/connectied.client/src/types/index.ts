@@ -2,34 +2,93 @@
     title: string
     href?: string
 }
-interface CreateGuest {
-    group?: string | null
-    name?: string | null
-}
-interface GuestList {
+
+interface GuestGroup {
     id: string
     name: string
-    group?: string
+}
+
+interface Guest {
+    id: string
+    name: string
+    email?: string
+    phoneNumber?: string
+    group?: GuestGroup
     event1Quota: number
     event2Quota: number
     event1Rsvp: number
     event2Rsvp: number
     event1Attend: number
     event2Attend: number
-    event2AngpaoCount: number
-    event2GiftCount: number
+    event1Angpao: number
+    event2Angpao: number
+    event1Gift: number
+    event2Gift: number
+    event1Souvenir: number
     event2Souvenir: number
     notes?: string
 }
+
+interface CreateGuest {
+    group?: string | null
+    name?: string | null
+}
+
+interface GuestListConfiguration {
+    columns?: string[]
+    groups?: string[]
+    includedGuests?: string[]
+    excludedGuests?: string[]
+}
+
+interface GuestList {
+    id?: string
+    name?: string
+    linkCode?: string
+    configuration?: GuestListConfiguration
+}
+
+interface GuestListWithGuests {
+    id?: string
+    name?: string
+    linkCode?: string
+    configuration?: GuestListConfiguration
+    guests?: Guest[]
+}
+
+interface GuestStats {
+    event1Quota: number
+    event2Quota: number
+    quota: number
+
+    event1Attendance: number
+    event2Attendance: number
+    attendance: number
+
+    event1Angpao: number
+    event2Angpao: number
+    angpao: number
+
+    event1Gift: number
+    event2Gift: number
+    gift: number
+
+    event1Souvenir: number
+    event2Souvenir: number
+    souvenir: number
+}
+
 interface UpdateGuest {
     id: string | null
     name?: string | null
     group?: string | null
 }
+
 interface Search {
     fields: string[]
     keyword?: string
 }
+
 type FilterLogic = "and" | "or" | "xor"
 
 type FilterOperator =
@@ -71,9 +130,14 @@ interface PagedList<T> {
 
 export type {
     BreadcrumbItem,
-    GuestList,
+    Guest,
+    GuestGroup,
     CreateGuest,
     UpdateGuest,
+    GuestListConfiguration,
+    GuestList,
+    GuestListWithGuests,
+    GuestStats,
     Search,
     FilterLogic,
     FilterOperator,
@@ -81,4 +145,3 @@ export type {
     PaginationFilter,
     PagedList
 }
-

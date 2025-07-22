@@ -1,8 +1,8 @@
-﻿import { Outlet } from "react-router-dom";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AppHeader } from "@/components/app-header";
-import { BreadcrumbProvider } from "../components/breadcrumb-context";
+﻿import { Outlet } from "react-router-dom"
+import { AppSidebar } from "@/components/app-sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { AppHeader } from "@/components/app-header"
+import { BreadcrumbProvider } from "@/components/breadcrumb-context"
 
 export default function MainLayout() {
     return (
@@ -17,5 +17,5 @@ export default function MainLayout() {
                 </SidebarInset>
             </SidebarProvider>
         </BreadcrumbProvider>
-    );
+    )
 }

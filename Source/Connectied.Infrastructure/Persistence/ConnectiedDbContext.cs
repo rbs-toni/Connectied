@@ -1,4 +1,5 @@
-﻿using Connectied.Domain.GuestList;
+﻿using Connectied.Domain.GuestLists;
+using Connectied.Domain.Guests;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -12,6 +13,9 @@ public class ConnectiedDbContext : DbContext
     }
 
     public DbSet<Guest> Guests => Set<Guest>();
+    public DbSet<GuestGroup> GuestGroups => Set<GuestGroup>();
+    public DbSet<GuestList> GuestLists => Set<GuestList>();
+    public DbSet<GuestListConfiguration> GuestListConfigurations => Set<GuestListConfiguration>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -20,9 +20,9 @@ const data = {
     navMain: [
         {
             title: "Guest List",
-            url: "/",
+            url: "/guest-lists",
             icon: Contact,
-        },
+        }
     ],
 }
 
@@ -54,7 +54,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenu>
                         {data.navMain.map((item, idx) => {
                             const isActive = location.pathname === item.url
-
                             return (
                                 <SidebarMenuItem key={idx}>
                                     <SidebarMenuButton

@@ -1,5 +1,5 @@
 ﻿import { createContext, useState, type ReactNode } from "react"
-import type { BreadcrumbItem } from "../types/breadcrumb-item"
+import type { BreadcrumbItem } from "@/types"
 
 type BreadcrumbContextType = {
     items: BreadcrumbItem[]
